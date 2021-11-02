@@ -1,35 +1,52 @@
-//인터페이스는 js파일에 포함되지 않는다.
-// js에서 인터페이스 내용을 보고 싶으면 class를 사용하면 된다.
-interface Human{
-    name:string;
-    age:number;
-    gender:string;
-}
+import * as CryptoJS from "crypto-js"
 
-const person = {
-    name:"min",
-    age:28,
-    gender:"male"
-}
 
-//java와 비슷함
+class Block {
+    public index : number;
+    public hash : string;
+    public previousHash: string;
+    public data : string;
+    public timestamp : number;
 
-class Human2 {
-    public name :string;
-    public age : number;
-    public gender : string;
-    constructor(name:string , age:number, gender:string){
-        this.name =name; this.age= age; this.gender=gender;
+    static calculateBlockHash = (index: number, previousHash:string, timestamp:number, data:string):string=>CryptoJS.SHA256(index + previousHash + timestamp + data).toString();
+
+
+    constructor(index : number,
+        hash : string,
+        previousHash : string,
+        data : string,
+        timestamp : number)
+        {
+        this.index = index;
+        this.hash=hash;
+        this.previousHash=previousHash;
+        this.data = data;
+        this.timestamp = timestamp;
     }
+
 }
 
-const newPerson = new Human2("guksu",2,"male")
+const genesisBlock:Block = new Block(0,"2154848","","Hello",123135);
 
-const sayHi = (person:Human):string =>{
-   return `Hello ${person.name}, you are ${person.age} old, ${person.gender}`;
+let blockchain: [Block] = [genesisBlock];
+
+const getBlockchain = ():Block[] => blockchain;
+
+const getLatestBlock = () : Block => blockchain[blockchain.length - 1];
+
+const getNewTimeStamp = () : number => Math.round(new Date().getTime()/1000);
+
+const createNewBlock = (data :string) : Block =>{
+    const previosBlock : Block = getLatestBlock();
+    const newIndex : number = previosBlock.index + 1;
+    const newTimestamp : number = getNewTimeStamp();
+    const newHash : string = Block.calculateBlockHash(newIndex, previosBlock.hash, newTimestamp, data);
+
+    const newBlock :Block = new Block(newIndex, newHash, previosBlock.hash, data, newTimestamp )
+
+    return newBlock
 }
 
-console.log("인터페이스사용 : "+sayHi(person));
-console.log("class 사용 : "+sayHi(newPerson));
+console.log(createNewBlock("hello"), createNewBlock("byby"))
 
 export {}
