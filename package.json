@@ -3,9 +3,16 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "tsc-watch --OnSuccess \"node dist/index.js\"",
+    "prestart": "npx tsc"
   },
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "tsc-watch": "^4.5.0"
+  }
 }
