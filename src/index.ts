@@ -43,10 +43,17 @@ const createNewBlock = (data :string) : Block =>{
     const newHash : string = Block.calculateBlockHash(newIndex, previosBlock.hash, newTimestamp, data);
 
     const newBlock :Block = new Block(newIndex, newHash, previosBlock.hash, data, newTimestamp )
-
+    addBlock(newBlock)
     return newBlock
 }
 
-console.log(createNewBlock("hello"), createNewBlock("byby"))
+const addBlock = (candidateBlock: Block): void => {
+      blockchain.push(candidateBlock);
+  };
+
+createNewBlock("hello");
+createNewBlock("byby");
+
+console.log(blockchain);
 
 export {}
